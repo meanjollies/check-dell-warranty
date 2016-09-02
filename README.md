@@ -10,6 +10,7 @@ Prior to running, make sure @apikey is set to a valid Dell API key. You can get 
 
 ### Todo
 - Display hardware model when using a switch
+- Display the INITIAL end date if no EXTENDED warranty is present
 
 License
 ---
