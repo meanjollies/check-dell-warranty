@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # title:  check-dell-warranty.rb
 # descr:  gets expiration dates for one or more service tags
-# author: andrew o'neill <meanjollies@users.noreply.github.com>
+# author: andrew o'neill
 # date:   2016
 
 require 'net/http'
