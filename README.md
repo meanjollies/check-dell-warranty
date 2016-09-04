@@ -13,7 +13,6 @@ Sometimes Dell's API site times out in returning a response, which can cause the
 
 ### Todo
 - Display hardware model when using a switch
-- Display the INITIAL end date if no EXTENDED warranty is present
 
 License
 ---
