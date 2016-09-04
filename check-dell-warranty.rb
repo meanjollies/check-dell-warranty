@@ -13,6 +13,7 @@ require 'date'
 
 # look up the service tag via dell's api
 def get_expiration(svctag)
+  exp_date = nil
   uri = URI("https://api.dell.com/support/v2/assetinfo/warranty/tags.json?svctags=#{svctag}&apikey=#{@apikey}")
   res = Net::HTTP.get_response(uri)
   
@@ -27,15 +28,25 @@ def get_expiration(svctag)
   
   warranties.each do |w|
     if w['EntitlementType'].downcase == 'extended' && w['ServiceLevelCode'].downcase == 'nd'
-      return Date.parse(w['EndDate']).strftime("%m/%d/%Y")
-    end
+      exp_date = Date.parse(w['EndDate']).strftime("%m/%d/%Y")
+      break
     # recently purchased hardware doesn't have an extended entitlement just yet  
-    if w['EntitlementType'].downcase == 'initial' && w['ServiceLevelCode'].downcase == 'nd'
-      return Date.parse(w['EndDate']).strftime("%m/%d/%Y")
+    elsif w['EntitlementType'].downcase == 'initial' && w['ServiceLevelCode'].downcase == 'nd'
+      exp_date = Date.parse(w['EndDate']).strftime("%m/%d/%Y")
+      break
+    else
+      next
     end
+  end
+
+  if ! exp_date.nil?
+    return exp_date
+  else
+    return "Unable to determine expiration date"
   end
 end
 
+# make sure that something is being passed in
 if ARGV.empty?
   puts "usage: $ ./check-dell-warranty.rb <service tag 1> [service tag N] ..."
   exit 1
