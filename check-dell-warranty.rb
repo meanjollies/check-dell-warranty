@@ -28,8 +28,9 @@ def get_expiration(svctag)
   warranties.each do |w|
     if w['EntitlementType'].downcase == 'extended' && w['ServiceLevelCode'].downcase == 'nd'
       return Date.parse(w['EndDate']).strftime("%m/%d/%Y")
+    end
     # recently purchased hardware doesn't have an extended entitlement just yet  
-    elsif w['EntitlementType'].downcase == 'initial' && w['ServiceLevelCode'].downcase == 'nd'
+    if w['EntitlementType'].downcase == 'initial' && w['ServiceLevelCode'].downcase == 'nd'
       return Date.parse(w['EndDate']).strftime("%m/%d/%Y")
     end
   end
