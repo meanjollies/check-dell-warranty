@@ -12,7 +12,6 @@ Prior to running, make sure @apikey is set to a valid Dell API key. You can get 
 Sometimes Dell's API site times out in returning a response, which can cause the script to bail out. Just re-run it again if this happens.
 
 ### Todo
-- Display hardware model when using a switch
 
 License
 ---
