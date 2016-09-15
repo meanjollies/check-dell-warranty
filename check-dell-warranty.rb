@@ -23,8 +23,9 @@ def get_expiration(svctag)
   end
   
   json = JSON.parse(res.body)
-  top_level = json['GetAssetWarrantyResponse']['GetAssetWarrantyResult']['Response']
-  warranties = top_level['DellAsset']['Warranties']['Warranty']
+  top_level = json['GetAssetWarrantyResponse']['GetAssetWarrantyResult']['Response']['DellAsset']
+  description = top_level['MachineDescription']
+  warranties = top_level['Warranties']['Warranty']
   
   warranties.each do |w|
     if w['EntitlementType'].downcase == 'extended' && w['ServiceLevelCode'].downcase == 'nd'
@@ -40,7 +41,7 @@ def get_expiration(svctag)
   end
 
   if ! exp_date.nil?
-    return exp_date
+    return "#{exp_date} -- #{description}"
   else
     return "Unable to determine expiration date"
   end
