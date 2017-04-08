@@ -7,6 +7,7 @@
 require 'net/http'
 require 'json'
 require 'date'
+require 'colorize'
 
 # enter your dell api key here
 @apikey = ''
@@ -38,6 +39,11 @@ def get_expiration(svctag)
   end
 
   if ! exp_date.nil?
+    if Date.strptime(exp_date, '%m/%d/%Y') >= Date.today
+      exp_date = exp_date.green
+    else
+      exp_date = exp_date.red
+    end
     return "#{exp_date} -- #{description}"
   else
     return "Unable to determine expiration date"
