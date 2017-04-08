@@ -6,10 +6,7 @@ check-dell-warranty is a small Ruby script that checks any number of Dell servic
 ```$ ./check-dell-warranty.rb <service tag 1> [service tag N] ...```
 
 ### Configuration
-Prior to running, make sure @apikey is set to a valid Dell API key. You can get one by registering an account on Dell's website.
-
-### Known Problems
-Sometimes Dell's API site times out in returning a response, which can cause the script to bail out. Just re-run it again if this happens.
+Prior to running, make sure @apikey is set to a valid Dell API key. You can apply for one through Dell TechDirect.
 
 ### Todo
 
