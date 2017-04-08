@@ -9,12 +9,12 @@ require 'json'
 require 'date'
 
 # enter your dell api key here
-@apikey = '849e027f476027a394edd656eaef4842'
+@apikey = ''
 
 # look up the service tag via dell's api
 def get_expiration(svctag)
   exp_date = nil
-  uri = URI("https://api.dell.com/support/v2/assetinfo/warranty/tags.json?svctags=#{svctag}&apikey=#{@apikey}")
+  uri = URI("https://sandbox.api.dell.com/support/assetinfo/v4/getassetwarranty/#{svctag}?apikey=#{@apikey}")
   res = Net::HTTP.get_response(uri)
   
   if res.code != '200'
@@ -23,16 +23,13 @@ def get_expiration(svctag)
   end
   
   json = JSON.parse(res.body)
-  top_level = json['GetAssetWarrantyResponse']['GetAssetWarrantyResult']['Response']['DellAsset']
-  description = top_level['MachineDescription']
-  warranties = top_level['Warranties']['Warranty']
-  
-  warranties.each do |w|
-    if w['EntitlementType'].downcase == 'extended' && w['ServiceLevelCode'].downcase == 'nd'
+  description = json['AssetWarrantyResponse'][0]['AssetHeaderData']['MachineDescription']
+  json['AssetWarrantyResponse'][0]['AssetEntitlementData'].each do |w|
+    if w['EntitlementType'].downcase == 'extended' && ( w['ServiceLevelCode'].downcase == 'nd' || w['ServiceLevelCode'].downcase == 'np' )
       exp_date = Date.parse(w['EndDate']).strftime("%m/%d/%Y")
       break
     # recently purchased hardware doesn't have an extended entitlement just yet  
-    elsif w['EntitlementType'].downcase == 'initial' && w['ServiceLevelCode'].downcase == 'nd'
+    elsif w['EntitlementType'].downcase == 'initial' && ( w['ServiceLevelCode'].downcase == 'nd' || w['ServiceLevelCode'].downcase == 'np' )
       exp_date = Date.parse(w['EndDate']).strftime("%m/%d/%Y")
       break
     else
@@ -46,7 +43,7 @@ def get_expiration(svctag)
     return "Unable to determine expiration date"
   end
 end
-
+  
 # make sure that something is being passed in
 if ARGV.empty?
   puts "usage: $ ./check-dell-warranty.rb <service tag 1> [service tag N] ..."
